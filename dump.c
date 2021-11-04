@@ -66,4 +66,61 @@ unsigned int get8LSB_TMR3(void);
 unsigned int get8MSB_TMR3(void);
 */
 
+/*
+         
+        if (hour == 24){
+            TMR1L = 0; //reset hour counter to zero
+            day_of_year ++;
+            
+            //increment day_of_month, month
+         
+            if (day_of_month == month_lengths[month-1])
+            {
+                day_of_month = 1;
+                if(month < 12){
+                    month ++;
+                } else {
+                    month = 1;
+                    year ++;
+                    day_of_year = 0;
+                }
+            } else {
+                day_of_month ++;
+            }
+            
+            //increment day of week
+            if (day_of_week < 7) {
+                day_of_week ++;
+            } else {
+                day_of_week = 1;
+            }
+            
+            //check for DST
+         * 
+         * 
+ 
+ //leap year check - Make this very rare!
+        if (year % 4 == 0){
+            leap = 1;
+            month_lengths[1] = 29;
+        } else{
+            month_lengths[1] = 28;
+        }
+           
+ 
+ * unsigned char day_of_month = 0; // 1-31
+unsigned char month; //1-12
+ * 
+unsigned char month_lengths[] = {31,28,31,30,31,30,31,31,30,31,30,31};
+ 
+ 
+ */
+
+ 
+            
+            
+            
+            
+
+
 
