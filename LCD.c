@@ -108,3 +108,9 @@ void LCD_sendstring(char *string)
 	}
 }
 
+
+void checkpoint() {
+    LCD_clear();
+    LCD_sendstring("checkpoint");
+    __delay_ms(500);
+}

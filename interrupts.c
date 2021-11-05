@@ -39,7 +39,7 @@ void __interrupt(high_priority) HighISR()
    }
     
     if(PIR2bits.C1IF == 1) { // check interrupt flag for comparator
-        LATHbits.LATH3 = !LATHbits.LATH3; // take action
+        LATHbits.LATH3 = !LATHbits.LATH3; // take action - toggle button
         PIR2bits.C1IF = 0; // clear interrupt flag
    }
 }

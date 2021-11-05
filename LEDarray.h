@@ -22,6 +22,7 @@ void LEDarray_button_init(void);
 void LEDarray_disp_bin(unsigned char number);
 void LEDarray_disp_dec(unsigned char number);
 void LEDarray_disp_PPM(unsigned char number, unsigned char max);
+void checkpoint();
 
 void check_dst_bwd(unsigned char *phour, unsigned char *pday_of_week,unsigned char *pdst_bwd);
 void check_dst_fwd(unsigned char *phour, unsigned char *pday_of_week, unsigned char *pdst_fwd);

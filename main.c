@@ -25,10 +25,12 @@
 //variables to keep track of time - must be correctly initalized (except hour)
 //pick day correctly through here https://www.timeanddate.com/date/weekday.html
 unsigned char hour; //0-24
-unsigned char day_of_week = 6; //1-7
-unsigned int day_of_year = 303; //1-365
+unsigned char day_of_week = 7; //1-7
+unsigned int day_of_year = 304; //1-365
 unsigned char year = 21; //1-99
 unsigned char leap = 0; //1 = leap, 0 = nonleap
+
+//unsigned char *pday_of_year = &day_of_year;
 
 unsigned char dst_fwd = 1;
 unsigned char dst_bwd = 0;
@@ -61,13 +63,15 @@ void main(void)
     while (1) 
     {    
         hour = get8LSB_TMR1(); //get hour(in testing case seconds)
-        LEDarray_disp_bin(hour); //display hour 
+        
        
-        if (hour > 1 && hour <5 ){
+        if (hour > 0 && hour < 5 ){
+            //checkpoint();
             LEDarray_disp_bin(0);//switch off
             CM1CON0bits.EN=0; //disable comparator
         } else {
-             CM1CON0bits.EN=1; //enable comparator
+            LEDarray_disp_bin(hour); //display hour 
+            CM1CON0bits.EN=1; //enable comparator //maybe call this less
         }
         
         //End of day 
@@ -75,6 +79,7 @@ void main(void)
         if (hour == 24)
         {
             new_day(&day_of_week, &day_of_year);
+            //checkpoint();
             if ((day_of_year > 365 && leap ==0) || (day_of_year > 366 && leap ==1))
             {
                 new_year(&day_of_week, &day_of_year, &year, &leap, &dst_bwd, &dst_fwd);
@@ -96,30 +101,10 @@ void main(void)
             }
         }
         
-        //LCD stuff 
-        LCD_setline(1);
-        //hour
-        sprintf(hour_string,"%02d", hour);
-        LCD_sendstring("H:");
-        LCD_sendstring(hour_string);
-        //Day of week
-        sprintf(day_of_week_string,"%02d", day_of_week);
-        LCD_sendstring(" DOW:");
-        LCD_sendstring(day_of_week_string);
-        //Day of year
-        LCD_setline(2);
-        sprintf(day_of_year_string,"%03d", day_of_year);
-        LCD_sendstring("DOY:");
-        LCD_sendstring(day_of_year_string);
-        //dst fwd
-        sprintf(dst_fwd_string,"%d", dst_fwd);
-        LCD_sendstring(" F:");
-        LCD_sendstring(dst_fwd_string);
-        //dst bwd
-        sprintf(dst_bwd_string,"%d", dst_bwd);
-        LCD_sendstring(" B:");
-        LCD_sendstring(dst_bwd_string);
-        //  
+        
+         
+         
+         
     }
-
+   
 }

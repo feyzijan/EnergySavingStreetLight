@@ -55,8 +55,10 @@ void check_dst_bwd(unsigned char *phour, unsigned char *pday_of_week,unsigned ch
 {   
     if(*pday_of_week  == 7 && *phour == 2)
     {
-        TMR1L --;
         *pdst_bwd = 1;
+        TMR1Lbits.TMR1L0 =1 ; //decrement hour counter
+        TMR1Lbits.TMR1L1 =0 ; 
+        
     }
 }
 
@@ -65,7 +67,7 @@ void check_dst_fwd(unsigned char *phour, unsigned char *pday_of_week, unsigned c
 {
     if(*pday_of_week == 7 && *phour == 2) 
     {
-        TMR1L ++; //increment hour counter
+        TMR1Lbits.TMR1L0 =1 ; //increment hour counter
         *pdst_fwd = 1; //toggle
     }
 }
@@ -74,10 +76,12 @@ void check_dst_fwd(unsigned char *phour, unsigned char *pday_of_week, unsigned c
 void new_day(unsigned char *pday_of_week, unsigned int *pday_of_year) 
 {
     TMR1L = 0; //reset hour counter to zero
-    *pday_of_year ++;
-    *pday_of_week ++;
+    (*pday_of_year)++;
+    (*pday_of_week)++;
+    //checkpoint();
     if(*pday_of_week == 8) *pday_of_week = 1; //check for next week
     //increment day_of_year, year, and update leap
+    //checkpoint();
 }
 
 
