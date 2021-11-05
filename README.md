@@ -1,5 +1,9 @@
 # Individual project - Energy saving automatic outside light
 
+## Explanation of my Work
+
+
+
 ## Learning outcomes
 
 The principal learning objectives for this project are:
@@ -33,8 +37,6 @@ No clock is perfect, they can all run slightly fast/slow and can by influenced b
 
 ![Day length](gifs/day-length-london.jpg)
 http://wordpress.mrreid.org/2010/10/31/why-change-the-clocks/
-
-
 
 
 
