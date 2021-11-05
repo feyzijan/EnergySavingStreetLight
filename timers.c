@@ -1,16 +1,24 @@
 #include <xc.h>
 #include "timers.h"
 
-extern int timer;
-
 /************************************
  * Function to set up timer 0
 ************************************/
 void Timer0_init(void)
 {
-    T0CON1bits.T0CS=0b010; // Fosc/4 ( Our base oscillation frequency(Fosc) is 64 Mhz)
+    //Test mode
+    T0CON1bits.T0CS=0b010; // TestMode: Fosc/4 ( Our base oscillation frequency(Fosc) is 64 Mhz)
     T0CON1bits.T0ASYNC=1; // needed to ensure correct operation when Fosc/4 used as clock source
     T0CON1bits.T0CKPS=0b1000 ; // Prescaler =  1000 = 1:256 - for one second we need 244 
+    
+    /*Real mode
+    T0CON1bits.T0CS=0b100; //RealMode: LFINTOSC  31000 Hz
+    T0CON1bits.T0CKPS=0b1011 ; // Prescale = 1:2048 - for one second we need 244 
+    //NOTE: START FROM 0b0010101100100011 to overflow in one hour
+    TMR0H = 0b00101011;
+    TMR0L = 0b00100011;
+    */
+   
     T0CON0bits.T016BIT=1;	//16bit mode	
     
     PIE0bits.TMR0IE = 1; //enable interrupt
@@ -38,19 +46,23 @@ void Timer1_init(void) // see page 365 for possible error cause
     T1GCONbits.GE = 1;
 }
 
-unsigned char get8LSB_TMR1(void){ 
+/************************************
+ * Function to return the full 16bit timer value
+ * Note TMR0L and TMR0H must be read in the correct order, or TMR0H will not contain the correct value
+************************************/
+
+unsigned char get8LSB_TMR1(void)
+{ 
     return TMR1L; 
 }
+
+//unused?
 unsigned char get8MSB_TMR1(void){
     TMR1L;
     return TMR1H;
 }
 
-
-/************************************
- * Function to return the full 16bit timer value
- * Note TMR0L and TMR0H must be read in the correct order, or TMR0H will not contain the correct value
-************************************/
+//unused?
 unsigned char get8MSB_TMR0(void)
 {
     TMR0L;
