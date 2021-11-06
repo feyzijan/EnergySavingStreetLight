@@ -46,7 +46,7 @@ void new_day(unsigned char *phour, unsigned char *pday_of_week, unsigned int *pd
             // add a 2.086 second delay per week to counteract the yearly 108 second drift
             // this is done by decrementing the value set in interrupt by 32
             TMR0H = 0b00101011; 
-            TMR0L = 0b00000011;
+            TMR0L = 0b00000100;
         }
         
     }
