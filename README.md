@@ -1,8 +1,35 @@
 # Individual project - Energy saving automatic outside light
 
 ## Explanation of my Work
+My solution makes use of Timers to keep track of time and various metrics, such as the day of week and year, to correctly account for daylight savings time, leap years, etc.
 
+The Timer0 module is set to overflow once an hour (once a second in test_mode), and Timer1 represents the hour of the day as it is set to count the overflow of Timer0.
+Timer1's value, the hour of day, is displayed on the LEDArray. 
 
+The LDR triggers an interruption and toggles the state of the LED RH3 once the ambient light is lower/higher than the threshold. 
+Between 1AM and 5AM the LED is turned off and the comparator is disabled so that the LED can't be toggled by the LDR.
+
+At the end of every day the code resets Timer1 to zero, increments the day of week and day of year variables. 
+If the end of day corresponds to the end of the year, the year variable is incremented and checked to see if it is a leap year, and the toggles for daylight savings time are switched to zero.
+
+**Daylight savings Time:**
+Clocks are wound forward at the last sunday of March and wound back at the last sunday of October, on 2AM. In non leap years these occur between the 84-90th, and 298-304th days of the year (+1 day in leap years). If the dst_fwd and/or dst_fwd variables are 0, and the appropriate day of year has been reached, the code checks to see if it is the 7th day of the week and 2AM, and wounds back the clock and toggles the dst variables to 1. 
+
+**Time Drift and correct Timer intervals**
+See the attached images for detailed calculations for selecting Timer0 clock source, pre-scaler, and initialization values.
+In real mode, Timer0 uses LFINTOSC, a 31KHz oscillator, with Prescaler: 2048, and starts each cycle at 11044 so that it overflows almost every hour.
+The imprecision leads to a time drift of -108.5 seconds per year, which is counteracted by making Timer0 run for 2 seconds longer once every week by starting it at 11012.
+The only other inaccuracy comes from the 4 instruction cycles of 62.5 ns each that are needed to correctly initialise and restart Timer0 once it overflows, but this leads to a 
+negligible time drift only.
+
+**Why this approach**
+If I had to rely on readings of time gathered from when the LDR triggered an interrupt, the lights would have to be switched on at dawn, off at dusk, and then stay on throughout the night except for 1-5AM. But external factors, such as a clouds or fog during the day, or carlights during the night, could trigger the LDR and so mess up the time calculations. Also the solar noon can have a range of 60 minutes throughout the year so it is not very accurate to base time readings off that.
+My code has a lot of continuous checking of time but this doesn't negatively influence the working of the system, except for maybe negligible increase in power consumption.
+
+## Timer Calculations 
+[RealModeCalc](https://user-images.githubusercontent.com/78698413/140614996-f6b541c2-116c-46bd-858d-c5358b41d4c7.jpg)
+![RealModeCalc2](https://user-images.githubusercontent.com/78698413/140614999-6157572d-41d8-4dcb-807b-cc9c8f24aa2d.jpg)
+![testmodeCalc](https://user-images.githubusercontent.com/78698413/140615000-53303abf-f2a2-41cd-a73c-fac0508a3a6b.jpg)
 
 ## Learning outcomes
 
@@ -12,8 +39,7 @@ The principal learning objectives for this project are:
 - Develop your ability to independently plan, organise and structure your code 
 - Improve your grasp of the C language and writing your own functions
 
-## Brief
-
+## Brief!
 Outside lights that respond to ambient light levels are commonplace (i.e. street lights, porch lights, garden lights etc). These types of lights switch on at dusk and then turn off at dawn. However, energy and money can be saved if these lights are switched off during the small hours of the morning (for example, between 1am and 5am), when there are very few people around. Many councils in the UK have implemented/trialled this idea for street lights (https://www.bbc.co.uk/news/uk-england-derbyshire-16811386). Your task is to use the knowledge of microcontrollers and hardware that you have gained in labs 1-3 from this module to develop a fully automated solution.
 
 ## Specification
