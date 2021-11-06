@@ -27,11 +27,11 @@ If I had to rely on readings of time gathered from when the LDR triggered an int
 My code has a lot of continuous checking of time but this doesn't negatively influence the working of the system, except for maybe negligible increase in power consumption.
 
 ## Timer Calculations 
-![RealModeCalc](https://user-images.githubusercontent.com/78698413/140614996-f6b541c2-116c-46bd-858d-c5358b41d4c7.jpg | width=100)
+[RealModeCalc](https://user-images.githubusercontent.com/78698413/140614996-f6b541c2-116c-46bd-858d-c5358b41d4c7.jpg)
 
-![RealModeCalc2](https://user-images.githubusercontent.com/78698413/140614999-6157572d-41d8-4dcb-807b-cc9c8f24aa2d.jpg)
+[RealModeCalc2](https://user-images.githubusercontent.com/78698413/140614999-6157572d-41d8-4dcb-807b-cc9c8f24aa2d.jpg)
 
-![testmodeCalc](https://user-images.githubusercontent.com/78698413/140615000-53303abf-f2a2-41cd-a73c-fac0508a3a6b.jpg)
+[testmodeCalc](https://user-images.githubusercontent.com/78698413/140615000-53303abf-f2a2-41cd-a73c-fac0508a3a6b.jpg)
 
 ## Learning outcomes
 
