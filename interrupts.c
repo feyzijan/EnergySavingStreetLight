@@ -19,25 +19,27 @@ void Interrupts_init(void)
 
 /************************************
  * High priority interrupt service routine
- * Toggle the state of the LED RH3 whenever the timer overflows
-************************************/
+ * Toggle the state of the LED RH3 whenever the LDR senses a shift in light levels. 
+ * Initialise Timer0 with correct values so it overflows in almost precisely 
+ * (1 hour or 1 second in test mode) 
+ ************************************/
 void __interrupt(high_priority) HighISR()
 {
-    if(PIR0bits.TMR0IF == 1) { // check interrupt flag for timer
-        
+    if(PIR0bits.TMR0IF == 1) { // check interrupt flag for timer        
         if(test_mode){
-            //LATHbits.LATH3 = !LATHbits.LATH3; // take action - toggle button for testing
+            //LATDbits.LATD7 =1; //for testing/debugging purposes only 
             // write 3036 into TMR0L bits to fix timer to 1 second
             TMR0H = 0b00001011;
             TMR0L = 0b11011100;
         } else {
-            TMR0H = 0b00101011; // 0b0110011000001111 - with PS:1024 and CS: 
+            // Write appropriate value to get overflow in exactly one hour 
+            TMR0H = 0b00101011; 
             TMR0L = 0b00100011;
         }
          PIR0bits.TMR0IF = 0; // clear interrupt flag
    }
    if(PIR2bits.C1IF == 1) { // check interrupt flag for comparator
-        //LATDbits.LATD7 = !LATDbits.LATD7;//for debugging
+        //LATDbits.LATD7 =1; //for testing/debugging purposes only 
         LATHbits.LATH3 = !LATHbits.LATH3; // take action - toggle LED 
         PIR2bits.C1IF = 0; // clear interrupt flag
    }

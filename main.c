@@ -12,29 +12,34 @@
 #include "dates.h"
  
 #define _XTAL_FREQ 64000000 //note intrinsic _delay function is 62.5ns at 64,000,000Hz
-#define testmode 1; // 1: test mode 1hour represented by 1s, 0:real mode
+#define testmode 1; // 1: test mode, 1 hour represented by 1s, 0:real mode
 unsigned char test_mode = testmode; //this value is used to toggle operations in other files
 
 
 /* Variables to keep track of time - must be correctly initalized, except for hour, 
- * which will start at 0. May use the link below to input variables correctly:
+ * which will start at 0 by default. May use the link below to input variables correctly:
  * https://www.timeanddate.com/date/weekday.html
  */
-unsigned char hour; //0-24
-unsigned char day_of_week = 7; //1-7
-unsigned int day_of_year = 304; //1-365 (or 366 if leap ==1)
+
+/*Note that in the example configuration below the date is 30/10/2021, you can
+observe the clocks being wound backwards on 31/11/2021 
+*/
+unsigned char hour = 0b00000000; //0-24
+unsigned char day_of_week = 6; //1-7
+unsigned int day_of_year = 303; //1-365 (or 366 if leap ==1)
 unsigned char year = 21; //1-99
 unsigned char leap = 0; //1 = leap, 0 = non leap year
 unsigned char dst_fwd = 1; // 1= clocks already moved forward this year
 unsigned char dst_bwd = 0;// 1= clocks already moved backwards this year
     
-void main(void) 
-{    
-    // setup pin for RD7 LED - for debugging/testing only
+void main(void) {    
+    /* setup pin for RD7 LED - for debugging/testing only: 
+     * RD7 LED can be toggled to check whether the proper instructions are being 
+     * executed, eg. if machine correctly enters non-test mode*/
     //LATDbits.LATD7=0;   //set initial output state
     //TRISDbits.TRISD7=0; //set TRIS value for pin (output)
 
-    // setup pin for RH3 LED 
+    // Setup pin for RH3 LED - Represents the Street Lamb
     LATHbits.LATH3=0;   //set initial output state
     TRISHbits.TRISH3=0; //set TRIS value for pin (output)
 
@@ -51,19 +56,19 @@ void main(void)
         hour = TMR1L; //get current hour(in testing case 1h = 1 second)
         LEDarray_disp_bin(hour); //display hour in LED
         
-        //Switch off LED RH3 between 1-5AM 
+        //Switch off LED between 1-5AM 
         if (hour > 0 && hour < 5 ) { 
             LATHbits.LATH3=0;
             CM1CON0bits.EN=0; //disable comparator so it doesn't toggle LED
         } else {
-            CM1CON0bits.EN=1; //enable comparator //*****************maybe call this less
+            CM1CON0bits.EN=1; //outside 1-5AM, let comparator toggle LED
         }
         
         //End of day sequence
         if (hour == 24) {   
             //call new_day function with pointers of variables to be updated
             new_day(&hour, &day_of_week, &day_of_year); 
-            //end of year sequence
+            //call new_year function if necessary
             if ((day_of_year > 365 && leap == 0) || (day_of_year > 366 && leap == 1)){
                 new_year(&day_of_year, &year, &leap, &dst_bwd, &dst_fwd);
             }

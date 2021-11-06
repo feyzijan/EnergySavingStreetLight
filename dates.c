@@ -3,7 +3,7 @@
 
 #include <xc.h>
 
-
+extern unsigned char test_mode;
 
 /*****************************************************
  *Called during a maximum of 7 days per year to check if the clocks should be wound back
@@ -40,7 +40,16 @@ void new_day(unsigned char *phour, unsigned char *pday_of_week, unsigned int *pd
     TMR1L = 0; //reset hour counter to zero
     (*pday_of_year)++;
     (*pday_of_week)++;
-    if(*pday_of_week == 8) *pday_of_week = 1; //check for next week
+    if(*pday_of_week == 8){ //check for next week
+        *pday_of_week = 1; 
+        if(!test_mode){ 
+            // add a 2.086 second delay per week to counteract the yearly 108 second drift
+            // this is done by decrementing the value set in interrupt by 32
+            TMR0H = 0b00101011; 
+            TMR0L = 0b00000011;
+        }
+        
+    }
 }
 
 
