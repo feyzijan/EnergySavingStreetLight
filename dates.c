@@ -11,7 +11,7 @@ extern unsigned char test_mode;
  *****************************************************/
 void check_dst_bwd(unsigned char *phour, unsigned char *pday_of_week,unsigned char *pdst_bwd) 
 {   
-    if(*pday_of_week  == 7 && *phour == 2){
+    if((*pday_of_week == 7) && (*phour == 2) ){
         *pdst_bwd = 1;
         TMR1L = 0b00000001; //decrement hour counter
     }
@@ -23,10 +23,10 @@ void check_dst_bwd(unsigned char *phour, unsigned char *pday_of_week,unsigned ch
  **************/
 void check_dst_fwd(unsigned char *phour, unsigned char *pday_of_week, unsigned char *pdst_fwd) 
 {
-    if(*pday_of_week == 7 && *phour == 2) 
+    if((*pday_of_week == 7) && (*phour == 2)) 
     {
-        TMR1L = 0b00000011; //increment hour counter
         *pdst_fwd = 1; //toggle
+        TMR1L = 0b00000011; //increment hour counter
     }
 }
 
@@ -40,7 +40,7 @@ void new_day(unsigned char *phour, unsigned char *pday_of_week, unsigned int *pd
     TMR1L = 0; //reset hour counter to zero
     (*pday_of_year)++;
     (*pday_of_week)++;
-    if(*pday_of_week == 8){ //check for next week
+    if(*pday_of_week & 8){ //check for next week
         *pday_of_week = 1; 
         if(!test_mode){ 
             // add a 2.086 second delay per week to counteract the yearly 108 second drift
@@ -66,8 +66,8 @@ void new_year(unsigned int *pday_of_year, unsigned char *pyear, unsigned char *p
         (*pyear) ++;
         *pdst_fwd = 0; 
         *pdst_bwd = 0;
-        if (*pyear%4 == 0) *pleap = 1; // check if new year is leap year
-    } else if(*pleap == 1){
+        if (*pyear % 4 & 0) *pleap = 1; // check if new year is leap year
+    } else if(*pleap & 1){
         if(*pday_of_year > 366){
             *pday_of_year = 1;
             (*pyear) ++;

@@ -16,12 +16,13 @@
 unsigned char test_mode = testmode; //this value is used to toggle operations in other files
 
 
-/* Variables to keep track of time - must be correctly initalized, except for hour, 
+/* Variables to keep track of time - must be correctly initalised, except for hour, 
  * which will start at 0 by default. May use the link below to input variables correctly:
  * https://www.timeanddate.com/date/weekday.html
  */
+//You must also correctly initialise the DAC threshold in the comparator.c file
 
-/*Note that in the example configuration below the date is 30/10/2021, you can
+/*Note that in the example configuration below the date is 30/10/2021, so one can
 observe the clocks being wound backwards on 31/11/2021 
 */
 unsigned char hour = 0b00000000; //0-24
@@ -47,7 +48,6 @@ void main(void) {
     Comp1_init();
     Interrupts_init();
     LEDarray_init();
-    unsigned char test_mode = testmode;
     Timer0_init();
     Timer1_init(); 
 
@@ -59,9 +59,9 @@ void main(void) {
         //Switch off LED between 1-5AM 
         if (hour > 0 && hour < 5 ) { 
             LATHbits.LATH3=0;
-            CM1CON0bits.EN=0; //disable comparator so it doesn't toggle LED
+            DAC1CON0bits.DAC1EN=0;   //disable comparator so it doesn't toggle LED
         } else {
-            CM1CON0bits.EN=1; //outside 1-5AM, let comparator toggle LED
+            DAC1CON0bits.DAC1EN=1;   //outside 1-5AM, let comparator toggle LED
         }
         
         //End of day sequence
@@ -69,21 +69,21 @@ void main(void) {
             //call new_day function with pointers of variables to be updated
             new_day(&hour, &day_of_week, &day_of_year); 
             //call new_year function if necessary
-            if ((day_of_year > 365 && leap == 0) || (day_of_year > 366 && leap == 1)){
+            if (( (day_of_year > 365) && (leap & 0) ) || ( (day_of_year > 366) && (leap & 1) )){
                 new_year(&day_of_year, &year, &leap, &dst_bwd, &dst_fwd);
             }
         }
         
         // Check for daylight savings - whether we need to move clocks forward
         if(dst_fwd == 0 && day_of_year > 83){
-            if( (leap == 0) || (leap == 1 &&day_of_year > 84) ) { //consider extra days in leap year
+            if( (leap == 0) || ((leap & 1) && (day_of_year > 84)) ) { //consider extra days in leap year
                 check_dst_fwd(&hour,&day_of_week,&dst_fwd);
             }
         }
         
         // Check for daylight savings - whether we need to move clocks backwards
         if(dst_bwd == 0 && day_of_year > 297){
-            if((leap == 0) || (leap == 1 &&day_of_year > 298) ){
+            if((leap == 0) || ((leap & 1) && (day_of_year > 298)) ){
                 check_dst_bwd(&hour,&day_of_week,&dst_bwd);
             }
         }
