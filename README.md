@@ -38,7 +38,8 @@ You need to input the correct day of year, day of week, year, and leap year and 
 [testmodeCalc](https://user-images.githubusercontent.com/78698413/140615000-53303abf-f2a2-41cd-a73c-fac0508a3a6b.jpg)
 
 ## Demo Video
-Please see file ECMMiniProjDemo.mp4
+Please see file ECMMiniProjDemo.mp4 or
+https://www.youtube.com/watch?v=ccwbNL4MLFM
 
 ## Learning outcomes
 
