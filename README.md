@@ -25,6 +25,10 @@ negligible time drift only.
 **Why this approach**
 If I had to rely on readings of time gathered from when the LDR triggered an interrupt, the lights would have to be switched on at dawn, off at dusk, and then stay on throughout the night except for 1-5AM. But external factors, such as a clouds or fog during the day, or carlights during the night, could trigger the LDR and so mess up the time calculations. Also the solar noon can have a range of 60 minutes throughout the year so it is not very accurate to base time readings off that.
 My code has a lot of continuous checking of time but this doesn't negatively influence the working of the system, except for maybe negligible increase in power consumption.
+All the checks are running continiously in the main function and not in interrupts, because otherwise the interrupts would be too frequent and long.
+
+**Initialization**
+You need to input the correct day of year, day of week, year, and leap year and daylight savings toggles for everything to function properly (hour is optional). The program starts off at midnight 30th October, 2021, so that in the following day you can observe daylights savings. The kit is set to be turned on in ambient light conditions that fall below the DAC threshold.
 
 ## Timer Calculations 
 [RealModeCalc](https://user-images.githubusercontent.com/78698413/140614996-f6b541c2-116c-46bd-858d-c5358b41d4c7.jpg)
